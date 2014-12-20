@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script>
+
+    function add(str) { $("#output").append(str); }
+    function replace(str) { $("#output").html(str); }
+
+    var sum_size=0;
+    var sum_time=0;
+
+    function speedtest(size,repeat)
+    {
+        var start;
+	var stop;
+   	var speed;
+   	var time;
+        var d;
+	add("Speedtest: "+size+" MByte --> ");
+	d=new Date();
+	start=d.getTime();
+        $.get("/blob/"+size,function() { 
+	    d=new Date();
+	    stop=d.getTime();
+	    time=stop-start;
+	    speed=(1000/time*size);
+	    add(time+" msec "+speed.toFixed(2)+" Mbyte/s <br>");
+	    if (time<=500 && repeat==0) { speedtest(size*2,0); }
+	    else {
+		sum_size+=size;
+		sum_time+=time;
+		if(repeat==4) { 
+		   $("#result").text("Result: "+sum_size+" MByte in "+sum_time/1000+" seconds : "+(sum_size/sum_time*1000*8).toFixed(2)+" MBit/s"); 
+		}
+		else speedtest(size,repeat+1);
+	    }
+	}).fail(function () { $("#result").text("Speedtest failed"); });
+    }
+
+    $(document).ready(function () {
+	$("button").click(function () {  $("div").html(""); speedtest(1,0); });
+    });
+
+</script>
+
+<style>
+    body { font-family: sans-serif; margin:20px; }
+    div { margin:20px; }
+    div#result { font-size:1.5em; }
+</style>
+
+</head>
+<body>
+    <h1>Speedtest</h1>
+    <button ()>Start</button>
+    <div id=result></div>
+    <div id=output></div>
+</body>
+</html>
