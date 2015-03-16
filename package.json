@@ -2,5 +2,9 @@
     "name": "speedtest",
     "description": "Webserver for Network Performance Tests",
     "version": "0.9.0",
-    "dependencies": { "express": "4.x" }
+    "dependencies": 
+    {
+    	"node-getopt": "0.2.x",
+	"express": "4.x" 
+    }
 }

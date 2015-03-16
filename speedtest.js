@@ -23,11 +23,23 @@ app.get('/blob/:size',function (req,res) {
 
 var blob=new Buffer(1024*1024);
 
+  	// ---------- initialize random blob 
 fs.open("/dev/urandom","r",function (err,fd) {
   fs.readSync(fd,blob,0,1024*1024,0);
-  console.log("Random Blob initialized");
 });
 
-var server = app.listen(8081, function() {
-    console.log('Listening on port %d', server.address().port);
+var listen="0.0.0.0";
+var port="8081";
+
+opt=require('node-getopt').create([
+        ["l","bindaddress=ARG","Listen to this IP (any)"],
+        ["p","port=ARG","Listen to this TCP Port (8081)"],
+        ['h','help','display this help']
+]).bindHelp().parseSystem();
+
+if (opt.options.bindaddress) listen=opt.options.bindaddress;
+if (opt.options.port) port=opt.options.port;
+
+var server = app.listen(port,listen, function() {
+    console.log('Listening on %s:%d', listen, server.address().port);
 });
