@@ -2,7 +2,11 @@
 var fs = require('fs');
 
 var express = require('express');
+var bodyParser = require('body-parser')
+
 var app = express();
+
+app.use(bodyParser.raw({inflate:false,type:"*/*",limit:1024*1024*1024*10}));
 
 app.use(function(err, req, res, next){
   	console.log("error: "+err.stack);
@@ -19,6 +23,10 @@ app.get('/blob/:size',function (req,res) {
     if (!size || size<=0) size=1;
     for (var i=0;i<size;i++) res.write(blob);
     res.end();
+});
+
+app.post('/blob/',function (req,res) {
+    res.send("OK: "+req.body.length);
 });
 
 var blob=new Buffer(1024*1024);

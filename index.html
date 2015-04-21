@@ -5,10 +5,11 @@
 <script>
 
     function add(str) { $("#output").append(str); }
-    function replace(str) { $("#output").html(str); }
 
     var sum_size=0;
     var sum_time=0;
+
+    var blob=false;
 
     function speedtest(size,repeat)
     {
@@ -17,7 +18,7 @@
    	var speed;
    	var time;
         var d;
-	add("Speedtest: "+size+" MByte --> ");
+	add("Dowload: "+size+" MByte --&gt; ");
 	d=new Date();
 	start=d.getTime();
         $.get("/blob/"+size,function() { 
@@ -31,15 +32,67 @@
 		sum_size+=size;
 		sum_time+=time;
 		if(repeat==4) { 
-		   $("#result").text("Result: "+sum_size+" MByte in "+sum_time/1000+" seconds : "+(sum_size/sum_time*1000*8).toFixed(2)+" MBit/s"); 
+		   $("#result").html("Download: "+sum_size+" MByte in "+sum_time/1000+" seconds : "+
+				     (sum_size/sum_time*1000*8).toFixed(2)+" MBit/s<br>"); 
+		   speedtest_upload(1,0);
 		}
 		else speedtest(size,repeat+1);
 	    }
-	}).fail(function () { $("#result").text("Speedtest failed"); });
+	})
+	.fail(function () { $("#result").text("Speedtest failed"); });
+    }
+
+    function speedtest_upload(size,repeat)
+    {
+        var start;
+	var stop;
+   	var speed;
+   	var time;
+        var d;
+	add("Upload: "+size/10+" MByte --&gt; ");
+	d=new Date();
+	start=d.getTime();
+
+	var upload_data=blob;
+	for (var i=1;i<size;i++) upload_data+=blob;
+
+        $.ajax({ type: "POST", url: "/blob/", contentType: 'application/octet-stream', 
+	  	 data: upload_data, processData:false })
+	    .done(function(data) { 
+	        d=new Date();
+	        stop=d.getTime();
+	        time=stop-start;
+	        speed=(1000/time*size/10);
+	        add(time+" msec "+speed.toFixed(2)+" Mbyte/s <br>");
+	        if (time<=500 && repeat==0) { speedtest_upload(size*2,0); }
+	        else 
+		{
+		    sum_size+=size;
+		    sum_time+=time;
+		    if(repeat==4) { 
+		       $("#result").append("Upload: "+sum_size/10+" MByte in "+sum_time/1000+" seconds : "+
+				           (sum_size/10/sum_time*1000*8).toFixed(2)+" MBit/s<br>"); 
+		    }
+		    else speedtest_upload(size,repeat+1);
+	        }
+	    })
+	    .fail(function () { $("#result").text("Speedtest failed"); });
+    }
+
+    function generate_random_data(len)
+    {
+	var chars = "!@#$%*()-_=+][{}|;:'~`<>.,/?\\\"0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+        var randomstring = '';
+        for (var i=0; i<len; i++) {
+            var rnum = Math.floor(Math.random() * chars.length);
+            randomstring += chars.substring(rnum,rnum+1);
+        }
+	return randomstring;
     }
 
     $(document).ready(function () {
 	$("button").click(function () {  $("div").html(""); speedtest(1,0); });
+	blob=generate_random_data(102*1024);
     });
 
 </script>
