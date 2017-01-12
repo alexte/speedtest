@@ -11,6 +11,13 @@
 
     var blob=false;
 
+    // path name at which speedtest is served
+    // e.g. http://localhost would have a blank
+    //      http://localhost/bla would have "/bla"
+    // automatically detected from URL
+    // http://stackoverflow.com/a/33893129/4126114
+    var prefix=document.location.pathname;
+
     function speedtest(size,repeat)
     {
         var start;
@@ -21,7 +28,7 @@
 	add("Dowload: "+size+" MByte --&gt; ");
 	d=new Date();
 	start=d.getTime();
-        $.get("/blob/"+size,function() { 
+        $.get(prefix+"/blob/"+size,function() {
 	    d=new Date();
 	    stop=d.getTime();
 	    time=stop-start;
@@ -56,7 +63,7 @@
 	var upload_data=blob;
 	for (var i=1;i<size;i++) upload_data+=blob;
 
-        $.ajax({ type: "POST", url: "/blob/", contentType: 'application/octet-stream', 
+        $.ajax({ type: "POST", url: prefix+"/blob/", contentType: 'application/octet-stream',
 	  	 data: upload_data, processData:false })
 	    .done(function(data) { 
 	        d=new Date();
