@@ -21,7 +21,7 @@
 	add("Dowload: "+size+" MByte --&gt; ");
 	d=new Date();
 	start=d.getTime();
-        $.get("/blob/"+size,function() { 
+        $.get("blob/"+size,function() { 
 	    d=new Date();
 	    stop=d.getTime();
 	    time=stop-start;
@@ -56,7 +56,7 @@
 	var upload_data=blob;
 	for (var i=1;i<size;i++) upload_data+=blob;
 
-        $.ajax({ type: "POST", url: "/blob/", contentType: 'application/octet-stream', 
+        $.ajax({ type: "POST", url: "blob/", contentType: 'application/octet-stream', 
 	  	 data: upload_data, processData:false })
 	    .done(function(data) { 
 	        d=new Date();
