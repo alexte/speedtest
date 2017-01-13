@@ -24,5 +24,25 @@ Listening on 0.0.0.0:8081
 
 ```
 
+A dockerfile is also published [here](https://hub.docker.com/r/shadiakiki1986/speedtest/). To use it:
+
+```
+> docker run -d shadiakiki1986/speedtest:shadi_add_dockerfile
+```
+
+To publish to a different port than the default 8081
+```
+> docker run -d -p 9876:8081 shadiakiki1986/speedtest:shadi_add_dockerfile
+```
+
 If you want to start alexte/speedtest in background at system start consider using "screen" or "forever"
-(http://blog.nodejitsu.com/keep-a-nodejs-server-up-with-forever/). 
+(http://blog.nodejitsu.com/keep-a-nodejs-server-up-with-forever/).
+Check usage in the Dockerfile
+
+
+DEV NOTES
+---------
+To build the dockerfile
+```
+> docker build -t speedtest .
+```
