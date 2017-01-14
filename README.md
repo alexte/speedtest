@@ -57,9 +57,10 @@ To publish to a different port than the default 8081
 > docker run -d -p 8888:8081 speedtest
 ```
 
-A dockerfile is also published [here](https://hub.docker.com/r/shadiakiki1986/speedtest/). To use it:
+A dockerfile is also published at [https://hub.docker.com/r/alexte/speedtest/](https://hub.docker.com/r/alexte/speedtest/). 
+To use it:
 
 ```
-> docker run -d -p 8081:8081 shadiakiki1986/speedtest:shadi_add_dockerfile
+> docker run -d -p 8081:8081 alexte/speedtest
 ```
 
